@@ -52,6 +52,8 @@ function walkDir(dir) {
     });
 }
 
+rimraf.sync('All Songs.m3u');
+
 rimraf.sync('Artists');
 
 fs.mkdirSync('Artists');
@@ -68,23 +70,23 @@ walkDir(filesDir)
             }
             artistMP3s[mp3.tags.artist][mp3.tags.album].push(mp3);
         });
+        var allSongsMP3s = [];
         for (var artist in artistMP3s) {
-            console.log(artist);
             fs.mkdirSync('Artists/' + artist);
-            var allSongsMP3s = [];
+            var allArtistMP3s = [];
             for (var album in artistMP3s[artist]) {
-                console.log(album);
                 artistMP3s[artist][album].sort(function (a, b) {
                     return a.track - b.track;
                 });
                 var albumM3U = '';
                 artistMP3s[artist][album].forEach(function (mp3) {
                     allSongsMP3s.push(mp3);
+                    allArtistMP3s.push(mp3);
                     albumM3U += mp3.getM3UEntry(2) + '\n';
                 });
                 fs.writeFileSync('Artists/' + artist + '/' + album.replace('/', '') + '.m3u', albumM3U);
             }
-            allSongsMP3s.sort(function (a, b) {
+            allArtistMP3s.sort(function (a, b) {
                 var aTitle = a.tags.title.toLowerCase();
                 var bTitle = b.tags.title.toLowerCase();
                 if (aTitle < bTitle) {
@@ -96,11 +98,27 @@ walkDir(filesDir)
                 }
             });
             var allSongsM3U = '';
-            allSongsMP3s.forEach(function (mp3) {
+            allArtistMP3s.forEach(function (mp3) {
                 allSongsM3U += mp3.getM3UEntry(2) + '\n';
             });
             fs.writeFileSync('Artists/' + artist + '/All Songs.m3u', allSongsM3U);
         }
+        allSongsMP3s.sort(function (a, b) {
+            var aTitle = a.tags.title.toLowerCase();
+            var bTitle = b.tags.title.toLowerCase();
+            if (aTitle < bTitle) {
+                return -1;
+            } else if (aTitle > bTitle) {
+                return 1
+            } else {
+                return 0;
+            }
+        });
+        var allSongsM3U = '';
+        allSongsMP3s.forEach(function (mp3) {
+            allSongsM3U += mp3.getM3UEntry(0) + '\n';
+        });
+        fs.writeFileSync('All Songs.m3u', allSongsM3U);
     });
 
 function MP3(tags, filePath) {
