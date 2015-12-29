@@ -1,0 +1,31 @@
+{
+  "name": "m3ugen",
+  "version": "0.0.0",
+  "description": "M3U Generator for devices that don't build their own library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/DanielBrierton/m3ugen.git"
+  },
+  "keywords": [
+    "m3u",
+    "media",
+    "mp3"
+  ],
+  "author": "Daniel Brierton <daniel@brierton.me> (http://danielbrierton.ie)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielBrierton/m3ugen/issues"
+  },
+  "homepage": "https://github.com/DanielBrierton/m3ugen",
+  "dependencies": {
+    "id3-parser": "^1.0.1",
+    "rimraf": "^2.5.0"
+  },
+  "bin": {
+    "m3ugen": "./index.js"
+  }
+}
